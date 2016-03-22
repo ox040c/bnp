@@ -20,9 +20,9 @@ def main(argv, estimators = [5, 10, 30, 50, 100, 150, 200, 250, 300, 400, 500, 1
         cv_best_index = np.argmax(cv_scores)
         etree = ExtraTreesClassifier(n_estimators=estimators[cv_best_index], n_jobs=-1)
         etree.fit(X, y)
-        y_test = etree.predict(test)
+        y_test = etree.predict_proba(test)
         np.savetxt(test_file+'.predict.txt', y_test)
 
 if __name__=='__main__':
     argv = [('train.t0.has.v8.csv', 'test.t0.has.v8.csv'), ('train.t0.no.v8.csv', 'test.t0.no.v8.csv')]
-    main(argv)
+    main(argv, [300, 500, 1000])
