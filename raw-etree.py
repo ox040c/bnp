@@ -23,5 +23,5 @@ def main(argv, estimators = [5, 10, 30, 50, 100, 150, 200, 250, 300, 400, 500, 1
         y_test.to_csv(test_file+'.predict.csv')
 
 if __name__=='__main__':
-    argv = [('train-t0-has-v8.csv', 'test-t0-has-v8.csv'), ('train-t0-no-v8.csv', 'test-t0-no-v8.csv')]
+    argv = [('train.t0.has.v8.csv', 'test.t0.has.v8.csv'), ('train.t0.no.v8.csv', 'test.t0.no.v8.csv')]
     main(argv)

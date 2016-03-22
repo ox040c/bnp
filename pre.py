@@ -39,12 +39,21 @@ def cleanFeatures(data):
                 data[attr][flag] = np.mean(data[attr][np.logical_not(flag)])
     return data
 
-def divideAndSave(data, attr, name):
+def divideAndSave(data, attr):
     flag = pd.isnull(data[attr])
-    dataHasAttr = cleanFeatures(data.loc[np.logical_not(flag)])
-    dataNoAttr = cleanFeatures(data.loc[flag])
-    dataHasAttr.to_csv(name+'-t0-has-'+attr+'.csv')
-    dataNoAttr.to_csv(name+'-t0-no-'+attr+'.csv')
+    data_1 = cleanFeatures(data.loc[np.logical_not(flag)])
+    data_0 = cleanFeatures(data.loc[flag])
+    train_1 = data_1[data_1.index < totalTrain]
+    train_0 = data_0[data_0.index < totalTrain]
+    train_1.to_csv('train.t0.has.'+attr+'.csv')
+    train_0.to_csv('train.t0.no.'+attr+'.csv')
+    test_1 = data_1[data_1.index >= totalTrain]
+    test_0 = data_0[data_1.index >= totalTrain]
+    test_1.index -= totalTrain
+    test_0.index -= totalTrain
+    test_1.to_csv('test.t0.has.'+attr+'.csv')
+    test_0.to_csv('test.t0.no.'+attr+'.csv')
+
 
 CONF_INTERVAL = 12
 
@@ -102,9 +111,5 @@ for i in range(1, 132):
         data[attr][data[attr]>m] = m
         data[attr][flag] = scaler.fit_transform(data[attr][flag].reshape(-1, 1))
 
-train = data[:totalTrain]
-test = data[totalTrain:]
-test.index -= totalTrain
-# divide train according to v1
-divideAndSave(train, 'v8', 'train')
-divideAndSave(test, 'v8', 'test')
+# divide train according to v8
+divideAndSave(data, 'v8')
