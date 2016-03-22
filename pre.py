@@ -48,7 +48,7 @@ def divideAndSave(data, attr):
     train_1.to_csv('train.t0.has.'+attr+'.csv')
     train_0.to_csv('train.t0.no.'+attr+'.csv')
     test_1 = data_1[data_1.index >= totalTrain]
-    test_0 = data_0[data_1.index >= totalTrain]
+    test_0 = data_0[data_0.index >= totalTrain]
     test_1.index -= totalTrain
     test_0.index -= totalTrain
     test_1.to_csv('test.t0.has.'+attr+'.csv')
