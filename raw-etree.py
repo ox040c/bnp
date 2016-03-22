@@ -12,7 +12,7 @@ def main(argv, estimators = [5, 10, 30, 50, 100, 150, 200, 250, 300, 400, 500, 1
         y = train['target']
         cv_scores = []
         for estimator in estimators:
-            etree = ExtraTreesClassifier(n_estimators=estimator, n_jobs=1)
+            etree = ExtraTreesClassifier(n_estimators=estimator, n_jobs=4)
             score = np.mean(cross_validation.cross_val_score(etree, X, y, n_jobs=-1))
             cv_scores.append(score)
             print "Estimator = %d, score = %f" % (estimator, score)
