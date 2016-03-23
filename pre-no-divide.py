@@ -32,14 +32,14 @@ def cleanFeatures(data):
         attr = featureNames[i]
         if attr not in drops:
             flag = pd.isnull(data[attr])
-            if np.sum(flag) > total/4:
-                data.drop(attr, axis=1, inplace=True)
-                print '[WARNING] Drop %s ...' % attr
+            # if np.sum(flag) > total/4:
+            #     data.drop(attr, axis=1, inplace=True)
+            #     print '[WARNING] Drop %s ...' % attr
+            # else:
+            if i in cat_alpha or i in cat_num:
+                data[attr][flag] = -1
             else:
-                if i in cat_alpha or i in cat_num:
-                    data[attr][flag] = -1
-                else:
-                    data[attr][flag] = np.mean(data[attr][np.logical_not(flag)])
+                data[attr][flag] = np.mean(data[attr][np.logical_not(flag)])
     return data
 
 def divideAndSave(data):
@@ -52,6 +52,8 @@ def divideAndSave(data):
 
 CONF_INTERVAL = 12
 
+drops = ['v1', 'v2', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9', 'v11', 'v13', 'v15', 'v16', 'v17', 'v18', 'v19', 'v20', 'v25', 'v26', 'v27', 'v28', 'v29', 'v32', 'v33', 'v35', 'v36', 'v37', 'v39', 'v41', 'v42', 'v43', 'v44', 'v45', 'v46', 'v48', 'v49', 'v51', 'v53', 'v54', 'v55', 'v57', 'v58', 'v59', 'v60', 'v61', 'v63', 'v64', 'v65', 'v67', 'v68', 'v69', 'v70', 'v73', 'v76', 'v77', 'v78', 'v80', 'v81', 'v82', 'v83', 'v84', 'v85', 'v86', 'v87', 'v88', 'v89', 'v90', 'v92', 'v93', 'v94', 'v95', 'v96', 'v97', 'v98', 'v99', 'v100', 'v101', 'v102', 'v103', 'v104', 'v105', 'v106', 'v108', 'v109', 'v111', 'v115', 'v116', 'v117', 'v118', 'v119', 'v120', 'v121', 'v122', 'v123', 'v124', 'v126', 'v127', 'v128', 'v130', 'v131']
+
 ln_0 = [23, 1, 6, 7, 8, 10, 13, 15, 17, 18, 19, 25, 26, 27, 28, 32, 33, 37, 39, 43, 46, 50, 54, 55, 60, 63, 73, 76, 80,
         83, 84, 85, 86, 88, 92, 94, 95, 99, 101, 102, 103, 104, 108, 111, 116, 118, 119, 120, 121, 123, 124, 126, 127,
         128, 130, 131]
@@ -62,6 +64,7 @@ bias = [4, 14, 16, 21, 29, 34, 35, 40, 41, 42, 44, 45, 48, 49, 51, 57, 64, 67, 9
 ok = [2, 5, 9, 58, 59, 69, 70, 77, 78, 81, 82, 87, 89, 97, 98, 100, 105, 106, 109, 115, 117, 122]
 cat_num = [38, 62, 72, 129]
 cat_alpha = [3, 24, 30, 31, 47, 52, 66, 71, 74, 75, 79, 91, 107, 110, 112, 22, 56, 113, 125]
+
 assert len(ln_0) + len(ln_1) + len(ln_2) + len(ln_3) + len(bias) + len(ok) + len(cat_num) + len(cat_alpha) == 131
 
 # input
@@ -77,13 +80,9 @@ test.index += totalTrain
 
 data = pd.concat([train, test])
 
-# remove features whose NaN > 97000
-drops = []
-for i in range(1, 132):
-    attr = featureNames[i]
-    if np.sum(data[attr].isnull()) > 97000:
-        data.drop(attr, axis=1, inplace=True)
-        drops.append(attr)
+# remove features
+for i in drops:
+    data.drop(i, axis=1, inplace=True)
 
 print "Drop: ",
 print drops
