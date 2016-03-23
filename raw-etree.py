@@ -12,8 +12,13 @@ def main(argv, estimators = [5, 10, 30, 50, 100, 150, 200, 250, 300, 400, 500, 1
         y = train['target']
         cv_scores = []
         for estimator in estimators:
-            etree = ExtraTreesClassifier(n_estimators=estimator, n_jobs=4)
-            score = np.mean(cross_validation.cross_val_score(etree, X, y, n_jobs=-1))
+            scores = []
+            for i in range(100):
+                etree = ExtraTreesClassifier(n_estimators=estimator, n_jobs=4)
+                scores.append(np.mean(cross_validation.cross_val_score(etree, X, y, n_jobs=-1)))
+                print '.',
+            print '|'
+            score = np.mean(scores)
             cv_scores.append(score)
             print "Estimator = %d, score = %f" % (estimator, score)
 
@@ -28,4 +33,4 @@ if __name__=='__main__':
     # main(argv, [1000])
 
     argv = [('train.t1.csv', 'test.t1.csv')]
-    main(argv)
+    main(argv, [50, 100, 200, 300, 500, 750, 1000])
