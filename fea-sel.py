@@ -14,6 +14,7 @@ def elasticNet(argv):
     enet.fit(X, y)
     dropIdx = featureNames[enet.coef_ < 1e-5]
     print "Elastic Net drop: %d" % len(dropIdx)
+    print dropIdx
     data.drop(dropIdx, axis=1, inplace=True)
     data.to_csv(argv+'.enet.csv')
     return enet
@@ -23,10 +24,11 @@ def extraTrees(argv):
     y = data['target']
     X = data.drop('target', axis=1)
     featureNames = X.columns.values
-    etree = ExtraTreesClassifier(n_jobs=-1)
+    etree = ExtraTreesClassifier(n_estimators=500, n_jobs=-1)
     etree.fit(X, y)
     dropIdx = featureNames[etree.feature_importances_ < np.mean(etree.feature_importances_)]
     print "ExtraTrees drop: %d" % len(dropIdx)
+    print dropIdx
     data.drop(dropIdx, axis=1, inplace=True)
     data.to_csv(argv+'.etree.csv')
     return etree

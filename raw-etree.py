@@ -24,5 +24,8 @@ def main(argv, estimators = [5, 10, 30, 50, 100, 150, 200, 250, 300, 400, 500, 1
         np.savetxt(test_file+'.predict.txt', y_test)
 
 if __name__=='__main__':
-    argv = [('train.t0.has.v8.csv', 'test.t0.has.v8.csv'), ('train.t0.no.v8.csv', 'test.t0.no.v8.csv')]
-    main(argv, [1000])
+    # argv = [('train.t0.has.v8.csv', 'test.t0.has.v8.csv'), ('train.t0.no.v8.csv', 'test.t0.no.v8.csv')]
+    # main(argv, [1000])
+
+    argv = [('train.t1.csv', 'test.t1.csv')]
+    main(argv)

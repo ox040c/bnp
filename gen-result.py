@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-def main(argv, pivot_attr ='v8'):
+def combine(argv, pivot_attr ='v8'):
     if 'no' in argv[2]:
         file_has_attr, file_no_attr = argv[1], argv[2]
     else:
@@ -24,8 +24,17 @@ def main(argv, pivot_attr ='v8'):
     result = pd.DataFrame({'ID':ids,'PredictedProb':preds})
     result.to_csv('result.csv', index=False)
 
+def generate(argv):
+    preds = np.loadtxt(argv[1]).tolist()
+    test_raw = pd.read_csv('test-raw.csv')
+    ids = test_raw['ID'].tolist()
+    result = pd.DataFrame({'ID':ids,'PredictedProb':preds})
+    result.to_csv('result.csv', index=False)
+
 if __name__ == '__main__':
     if  (len(sys.argv) == 3):
-        main(sys.argv)
+        combine(sys.argv)
+    elif len(sys.argv) == 2:
+        generate(sys.argv)
     else:
         print 'File names should be given.'
