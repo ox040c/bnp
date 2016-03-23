@@ -124,9 +124,8 @@ def bh_tsne(samples, no_dims=DEFAULT_NO_DIMS, initial_dims=INITIAL_DIMENSIONS, p
             results = [(_read_unpack('i', output_file), e) for e in results]
             # Put the results in order and yield it
             results.sort()
-            return results
-            # for _, result in results:
-            #     yield result
+            for _, result in results:
+                yield result
             # The last piece of data is the cost for each sample, we ignore it
             #read_unpack('{}d'.format(sample_count), output_file)
 
@@ -140,8 +139,11 @@ def main(filename):
     # plt.scatter(reduced[:, 0], reduced[:, 1], cmap=y)
     # plt.savefig('tsne.png')
 
-    result = bh_tsne(X, no_dims=2, perplexity=50, theta=0.5, randseed=-1, verbose=True, initial_dims=len(indices))
+    result = list(bh_tsne(X, no_dims=2, perplexity=50, theta=0.5, randseed=-1, verbose=True, initial_dims=len(indices)))
     np.savetxt(filename+'.tsne2d.txt', result)
+    result = np.array(result)
+    plt.scatter(result[:, 0], result[:, 1], c=['r', 'b'], cmap=y)
+    plt.savefig(filename+'.tsne.png')
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
