@@ -5,3 +5,4 @@
 *.npy
 *.txt
 *.ipynb
+bhtsne/bntsne
