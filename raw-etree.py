@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn import cross_validation
 
-def main(argv, estimators = [5, 10, 30, 50, 100, 150, 200, 250, 300, 400, 500, 1000]):
+def main(argv, estimators = [5, 10, 30, 50, 100, 150, 200, 250, 300, 400, 500, 1000], rep = 20):
     for train_file, test_file in argv:
         train = pd.read_csv(train_file, index_col=0)
         test = pd.read_csv(test_file, index_col=0)
@@ -13,7 +13,7 @@ def main(argv, estimators = [5, 10, 30, 50, 100, 150, 200, 250, 300, 400, 500, 1
         cv_scores = []
         for estimator in estimators:
             scores = []
-            for i in range(100):
+            for i in range(rep):
                 etree = ExtraTreesClassifier(n_estimators=estimator, n_jobs=4)
                 scores.append(np.mean(cross_validation.cross_val_score(etree, X, y, n_jobs=-1)))
                 print '.',
