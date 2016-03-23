@@ -2,7 +2,6 @@ import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.manifold import TSNE
 
 from argparse import ArgumentParser, FileType
 from os.path import abspath, dirname, isfile, join as path_join
