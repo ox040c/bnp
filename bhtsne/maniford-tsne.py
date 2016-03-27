@@ -1,8 +1,8 @@
+# -*- coding:utf-8 -*- 
 import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.manifold import TSNE
 from mpl_toolkits.mplot3d import Axes3D
 
 from argparse import ArgumentParser, FileType
@@ -172,3 +172,4 @@ if __name__ == '__main__':
         main(sys.argv[1:])
     else:
         main(['../train.t1.csv', '../test.t1.csv'])
+
