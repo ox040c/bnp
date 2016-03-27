@@ -28,6 +28,8 @@ def main(argv, estimators = [5, 10, 30, 50, 100, 150, 200, 250, 300, 400, 500, 1
         for i in range(rep):
             etree.fit(X, y)
             y_tests.append(etree.predict_proba(test)[:, 1])
+            print '.',
+        print '|'
         y_test = np.mean(y_tests, 0)
         np.savetxt(test_file+'.etree.txt', y_test)
 
