@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
+from mpl_toolkits.mplot3d import Axes3D
 
 from argparse import ArgumentParser, FileType
 from os.path import abspath, dirname, isfile, join as path_join
@@ -15,7 +16,7 @@ from platform import system
 from os import devnull
 import numpy as np
 
-indices = ['v23', 'v10', 'v50', 'v114', 'v12', 'v14', 'v21', 'v34', 'v40']
+indices = ['v10', 'v50', 'v114', 'v12', 'v14', 'v21', 'v34', 'v40']
 
 ### Constants
 IS_WINDOWS = True if system() == 'Windows' else False
@@ -129,24 +130,45 @@ def bh_tsne(samples, no_dims=DEFAULT_NO_DIMS, initial_dims=INITIAL_DIMENSIONS, p
             # The last piece of data is the cost for each sample, we ignore it
             #read_unpack('{}d'.format(sample_count), output_file)
 
-def main(filename):
-    data = pd.read_csv(filename, index_col=0)
-    X = np.array(data[indices]).tolist()
-    y = np.array(data['target'])
-    # tsne = TSNE(n_components=2)
-    # reduced = tsne.fit_transform(X)
-    # np.savetxt(filename+'.tsne2d.txt', reduced)
-    # plt.scatter(reduced[:, 0], reduced[:, 1], cmap=y)
-    # plt.savefig('tsne.png')
+def main(argv):
+    if len(argv) == 1:
+        filename = argv[0]
+        data = pd.read_csv(filename, index_col=0)
+        X = np.array(data[indices][:]).tolist()
+        y = np.array(data['target'])
+        # tsne = TSNE(n_components=2)
+        # reduced = tsne.fit_transform(X)
+        # np.savetxt(filename+'.tsne2d.txt', reduced)
+        # plt.scatter(reduced[:, 0], reduced[:, 1], cmap=y)
+        # plt.savefig('tsne.png')
 
-    result = list(bh_tsne(X, no_dims=2, perplexity=50, theta=0.5, randseed=-1, verbose=True, initial_dims=len(indices)))
-    np.savetxt(filename+'.tsne2d.txt', result)
-    result = np.array(result)
-    plt.scatter(result[:, 0], result[:, 1], c=['r', 'b'], cmap=y)
-    plt.savefig(filename+'.tsne.png')
+        result = list(bh_tsne(X, no_dims=3, perplexity=30, theta=0.5, randseed=-1, verbose=True, initial_dims=len(indices)))
+        np.savetxt(filename+'.tsne3d.txt', result)
+        result = np.array(result)
+
+        # plt.scatter(result[:, 0], result[:, 1], c=['r', 'b'], cmap=y[:10000])
+
+        fig = plt.figure()
+        ax = Axes3D(fig)
+        c = [['r', 'b'][int(i+0.5)] for i in y[:]]
+        ax.scatter(result[:, 0], result[:, 1], result[:, 2], c=c)
+        plt.savefig(filename+'.tsne.png')
+    else:
+        train = pd.read_csv(argv[0], index_col=0)[:]
+        test = pd.read_csv(argv[1], index_col=0)[:]
+        train_total = len(train)
+        data = pd.concat([train, test])
+        X = np.array(data[indices][:]).tolist()
+        result = list(bh_tsne(X, no_dims=3, perplexity=50, theta=0.5, randseed=-1, verbose=True, initial_dims=len(indices)))
+        train = result[:train_total]
+        test = result[train_total:]
+        np.savetxt(argv[0]+'.tsne3d.txt', train)
+        np.savetxt(argv[1]+'.tsne3d.txt', test)
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        main(sys.argv[1])
+        main([sys.argv[1]])
+    elif len(sys.argv) == 3:
+        main(sys.argv[1:])
     else:
-        main('../train.t1.csv')
+        main(['../train.t1.csv', '../test.t1.csv'])
