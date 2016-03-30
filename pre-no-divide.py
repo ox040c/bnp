@@ -39,7 +39,7 @@ def cleanFeatures(data):
             if i in cat_alpha or i in cat_num:
                 data[attr][flag] = -1
             else:
-                data[attr][flag] = np.mean(data[attr][np.logical_not(flag)])
+                data[attr][flag] = -999 #np.mean(data[attr][np.logical_not(flag)])
     return data
 
 def divideAndSave(data):
@@ -50,7 +50,7 @@ def divideAndSave(data):
     train.to_csv('train.t1.csv')
     test.to_csv('test.t1.csv')
 
-CONF_INTERVAL = 12
+CONF_INTERVAL = 12*5
 
 drops = ['v107', 'v1', 'v2', 'v4', 'v5', 'v6', 'v7', 'v8', 'v9', 'v11', 'v13', 'v15', 'v16', 'v17', 'v18', 'v19', 'v20', 'v25', 'v26', 'v27', 'v28', 'v29', 'v32', 'v33', 'v35', 'v36', 'v37', 'v39', 'v41', 'v42', 'v43', 'v44', 'v45', 'v46', 'v48', 'v49', 'v51', 'v53', 'v54', 'v55', 'v57', 'v58', 'v59', 'v60', 'v61', 'v63', 'v64', 'v65', 'v67', 'v68', 'v69', 'v70', 'v73', 'v76', 'v77', 'v78', 'v80', 'v81', 'v82', 'v83', 'v84', 'v85', 'v86', 'v87', 'v88', 'v89', 'v90', 'v92', 'v93', 'v94', 'v95', 'v96', 'v97', 'v98', 'v99', 'v100', 'v101', 'v102', 'v103', 'v104', 'v105', 'v106', 'v108', 'v109', 'v111', 'v115', 'v116', 'v117', 'v118', 'v119', 'v120', 'v121', 'v122', 'v123', 'v124', 'v126', 'v127', 'v128', 'v130', 'v131']
 
