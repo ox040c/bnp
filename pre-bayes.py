@@ -43,14 +43,15 @@ def MungeData(train, test):
     return train, test
 
 if __name__ == "__main__":
+    na_flag = '.na-mean'
     print('Start')
     print('Importing Data')
-    train = pd.read_csv('train.t1.csv', index_col=0)
-    test = pd.read_csv('test.t1.csv', index_col=0)
+    train = pd.read_csv('train.t1'+na_flag+'.csv', index_col=0)
+    test = pd.read_csv('test.t1'+na_flag+'.csv', index_col=0)
     print(train[train.target == 0].shape[0])
     print(train[train.target == 1].shape[0])
     print('Munge Data')
     train, test = MungeData(train, test)
-    train.to_csv('train.bayes.csv')
-    test.to_csv('test.bayes.csv')
+    train.to_csv('train.bayes'+na_flag+'.csv')
+    test.to_csv('test.bayes'+na_flag+'.csv')
     print('Finish')

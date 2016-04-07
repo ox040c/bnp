@@ -16,7 +16,12 @@ from platform import system
 from os import devnull
 import numpy as np
 
-indices = ['v10', 'v50', 'v114', 'v12', 'v14', 'v21', 'v34', 'v40']
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import scale
+
+indices = ['v10', 'v50', 'v114', 'v12', 'v14', 'v21', 'v34', 'v40',
+           'v3', 'v24', 'v30', 'v31', 'v47', 'v52', 'v66', 'v71', 'v74',
+           'v75', 'v79', 'v91', 'v110','v112', 'v56', 'v113', 'v125']
 
 ### Constants
 IS_WINDOWS = True if system() == 'Windows' else False
@@ -130,11 +135,13 @@ def bh_tsne(samples, no_dims=DEFAULT_NO_DIMS, initial_dims=INITIAL_DIMENSIONS, p
             # The last piece of data is the cost for each sample, we ignore it
             #read_unpack('{}d'.format(sample_count), output_file)
 
+START = 100000
+
 def main(argv):
     if len(argv) == 1:
         filename = argv[0]
         data = pd.read_csv(filename, index_col=0)
-        X = np.array(data[indices][:]).tolist()
+        X = np.array(data[indices][START:]).tolist()
         y = np.array(data['target'])
         # tsne = TSNE(n_components=2)
         # reduced = tsne.fit_transform(X)
@@ -142,17 +149,20 @@ def main(argv):
         # plt.scatter(reduced[:, 0], reduced[:, 1], cmap=y)
         # plt.savefig('tsne.png')
 
-        result = list(bh_tsne(X, no_dims=3, perplexity=30, theta=0.5, randseed=-1, verbose=True, initial_dims=len(indices)))
-        np.savetxt(filename+'.tsne3d.txt', result)
+        pca = PCA(n_components=2)
+        result = pca.fit_transform(scale(X))
+        # result = list(bh_tsne(X, no_dims=2, perplexity=50, theta=0.5, randseed=-1, verbose=True, initial_dims=len(indices)))
+        # np.savetxt(filename+'.tsne3d.txt', result)
         result = np.array(result)
 
-        # plt.scatter(result[:, 0], result[:, 1], c=['r', 'b'], cmap=y[:10000])
+        plt.scatter(result[:, 0], result[:, 1], c=['r', 'b'], cmap=y[START:])
+        plt.show()
 
-        fig = plt.figure()
-        ax = Axes3D(fig)
-        c = [['r', 'b'][int(i+0.5)] for i in y[:]]
-        ax.scatter(result[:, 0], result[:, 1], result[:, 2], c=c)
-        plt.savefig(filename+'.tsne.png')
+        # fig = plt.figure()
+        # ax = Axes3D(fig)
+        # c = [['r', 'b'][int(i+0.5)] for i in y[START:]]
+        # ax.scatter(result[:, 0], result[:, 1], result[:, 2], c=c)
+        # plt.savefig(filename+'.tsne.png')
     else:
         train = pd.read_csv(argv[0], index_col=0)[:]
         test = pd.read_csv(argv[1], index_col=0)[:]
@@ -171,5 +181,5 @@ if __name__ == '__main__':
     elif len(sys.argv) == 3:
         main(sys.argv[1:])
     else:
-        main(['../train.t1.csv', '../test.t1.csv'])
+        main(['../train.t1.na-mean.csv', '../test.t1.na-mean.csv'])
 

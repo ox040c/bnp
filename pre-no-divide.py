@@ -39,7 +39,8 @@ def cleanFeatures(data):
             if i in cat_alpha or i in cat_num:
                 data[attr][flag] = -1
             else:
-                data[attr][flag] = -999 #np.mean(data[attr][np.logical_not(flag)])
+                # data[attr][flag] = -999
+                data[attr][flag] = np.mean(data[attr][np.logical_not(flag)])
     return data
 
 def divideAndSave(data):
@@ -47,8 +48,8 @@ def divideAndSave(data):
     train = data[:totalTrain]
     test = data[totalTrain:]
     test.index -= totalTrain
-    train.to_csv('train.t1.csv')
-    test.to_csv('test.t1.csv')
+    train.to_csv('train.t1.na-mean.csv')
+    test.to_csv('test.t1.na-mean.csv')
 
 CONF_INTERVAL = 12*5
 

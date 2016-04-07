@@ -5,4 +5,5 @@
 *.npy
 *.txt
 *.ipynb
+*.buffer
 bhtsne/bh_tsne

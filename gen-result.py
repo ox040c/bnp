@@ -29,7 +29,7 @@ def generate(argv):
     test_raw = pd.read_csv('test-raw.csv')
     ids = test_raw['ID'].tolist()
     result = pd.DataFrame({'ID':ids,'PredictedProb':preds})
-    result.to_csv('result.csv', index=False)
+    result.to_csv(argv[1]+'.result.csv', index=False)
 
 if __name__ == '__main__':
     if  (len(sys.argv) == 3):
