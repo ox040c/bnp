@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn import preprocessing
 from sklearn.ensemble import ExtraTreesClassifier
 
+DROP_ALPHA = True
 
 def notnull(data):
     return np.logical_not(pd.isnull(data))
@@ -66,6 +67,12 @@ def encodeCategorical(train, test):
             train[attr+'_avgR'] = train[attr].map(lambda x: response[x] + np.random.normal(0, sigma)).reshape(-1, 1)*20
             test[attr+'_avgR'] = test[attr].map(lambda x: response[x]).reshape(-1, 1)*20
 
+            # drop alphabetical features
+            if DROP_ALPHA and i in cat_alpha:
+                train.drop(attr, axis=1, inplace=True)
+                test.drop(attr, axis=1, inplace=True)
+
+
 def featureSelection(train, test):
     print '==== Start Feature Selection ===='
     etree = ExtraTreesClassifier(n_estimators=1000, n_jobs=-1, criterion='entropy')
@@ -92,8 +99,8 @@ def divideAndSave(data):
     featureSelection(train, test)
 
     print '==== Saving Data ===='
-    train.to_csv('train.t3.na-sp.csv')
-    test.to_csv('test.t3.na-sp.csv')
+    train.to_csv('train.t3'+('da' if DROP_ALPHA else '')+'.na-sp.csv')
+    test.to_csv('test.t3'+('da' if DROP_ALPHA else '')+'.na-sp.csv')
 
 CONF_INTERVAL = 12*5
 
