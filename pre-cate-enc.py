@@ -57,11 +57,15 @@ def encodeCategorical(train, test):
             response = {}
             for val in np.unique(np.concatenate([train[attr].values, test[attr].values])):
                 count[val] = 1.0*(np.sum(train[attr]==val) + np.sum(test[attr]==val))/total
-                response[val] = 1.0*np.sum(train['target'][train[attr]==val])
-            train[attr+'_c'] = train[attr].map(lambda x: count[x]).reshape(-1, 1)
-            test[attr+'_c'] = test[attr].map(lambda x: count[x]).reshape(-1, 1)
-            train[attr+'_avgR'] = (train[attr].map(lambda x: response[x])-train['target'])/(totalTrain-1)
-            test[attr+'_avgR'] = test[attr].map(lambda x: response[x])/totalTrain
+                response[val] = 1.0*np.sum(train['target'][train[attr]==val])/totalTrain
+            if attr=='v22':
+                sigma = 1e-6
+            else:
+                sigma = 5e-5
+            train[attr+'_c'] = train[attr].map(lambda x: count[x] + np.random.normal(0, sigma)).reshape(-1, 1)*20
+            test[attr+'_c'] = test[attr].map(lambda x: count[x]).reshape(-1, 1)*20
+            train[attr+'_avgR'] = train[attr].map(lambda x: response[x] + np.random.normal(0, sigma)).reshape(-1, 1)*20
+            test[attr+'_avgR'] = test[attr].map(lambda x: response[x]).reshape(-1, 1)*20
 
 def featureSelection(train, test):
     print '==== Start Feature Selection ===='

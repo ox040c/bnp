@@ -37,5 +37,6 @@ if __name__=='__main__':
     # argv = [('train.t0.has.v8.csv', 'test.t0.has.v8.csv'), ('train.t0.no.v8.csv', 'test.t0.no.v8.csv')]
     # main(argv, [1000])
 
-    argv = [('train.t1.csv', 'test.t1.csv')]
+    # argv = [('train.t1.csv', 'test.t1.csv')]
+    argv = [('train.t3.na-sp.csv', 'test.t3.na-sp.csv')]
     main(argv, [500,1000])
