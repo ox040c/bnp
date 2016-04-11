@@ -28,8 +28,8 @@ def MungeData(train, test):
             count = {}
             for x in features:
                 count[x] = (np.sum(train[col] == x) + np.sum(test[col] == x))*1.0 / total
-            train['v22'] = scaler.fit_transform(train[col].map(lambda x: count[x]).reshape(-1, 1))
-            test['v22'] = scaler.fit_transform(test[col].map(lambda x: count[x]).reshape(-1, 1))
+            train['v22'] = train[col].map(lambda x: count[x]).reshape(-1, 1)*20
+            test['v22'] = test[col].map(lambda x: count[x]).reshape(-1, 1)*20
 
         elif (col in cat_alpha):
             print(col)
@@ -37,8 +37,8 @@ def MungeData(train, test):
             bin_test, _ = Binarize(col, test, bin_features)
             nb = BernoulliNB()
             nb.fit(bin_train, train['target'])
-            train[col] = scaler.fit_transform(nb.predict_proba(bin_train)[:, 1].reshape(-1, 1))
-            test[col] = scaler.fit_transform(nb.predict_proba(bin_test)[:, 1].reshape(-1, 1))
+            train[col] = nb.predict_proba(bin_train)[:, 1].reshape(-1, 1)*20
+            test[col] = nb.predict_proba(bin_test)[:, 1].reshape(-1, 1)*20
 
     return train, test
 
