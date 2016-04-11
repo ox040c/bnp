@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
-from sklearn.feature_selection import SelectFromModel
 from sklearn.ensemble import ExtraTreesClassifier
 
 
